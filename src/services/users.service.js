@@ -15,22 +15,52 @@ const users = [
 
 let id = 3;
 
+const createUser = async (userData) => {
+  const newUser = {
+    id,
+    ...userData,
+  };
+  id++;
+  users.push(newUser);
+  return newUser;
+};
+
 const getAllUsers = async () => {
   return users;
 };
 
-const createUser = async (name, email, BOD) => {
-  const newUser = {
-    id,
-    name,
-    email,
-    BOD,
+const getUserById = async (id) => {
+  let findUser = users.find((user) => user.id === Number(id));
+  return findUser;
+};
+
+const updateUser = async (id, userData) => {
+  const userIndex = users.findIndex((user) => user.id === Number(id));
+
+  if (userIndex === -1) {
+    return null;
+  }
+  users[userIndex] = {
+    ...users[userIndex],
+    ...userData,
   };
-  id++;
-  users.push(newUser);
+  return users[userIndex];
+};
+
+const deleteUser = async (id) => {
+  const userIndex = users.findIndex((user) => user.id === Number(id));
+
+  if (userIndex === -1) {
+    return null;
+  }
+  users.splice(userIndex, 1);
+  return "User delete";
 };
 
 module.exports = {
   getAllUsers,
   createUser,
+  getUserById,
+  updateUser,
+  deleteUser,
 };
