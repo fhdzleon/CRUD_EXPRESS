@@ -1,12 +1,28 @@
-const validateUser = (req, res, next) => {
-  const { name, email, BOD } = req.body;
+const User = require("../models/User");
 
-  if (!name || !email || !BOD) {
+const validateUser = async (req, res, next) => {
+  const { name, email, BOD, password } = req.body;
+
+  if (!name || !email || !BOD || !password) {
     return res.status(400).json({
       error: "Faltan datos, Revise",
     });
-  } else {
+  }
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({
+        error: "Ya existe un usuario con este correo",
+      });
+    }
     next();
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      error: "Error al validar el usuario",
+    });
   }
 };
 
